@@ -1,0 +1,72 @@
+{
+  "mehrnews": {
+    "base_url": "https://www.mehrnews.com",
+    "attributes": "/archive?pi={page_index}&ms=0&dy={day}&mn={month}&yr={year}",
+    "archive": {
+      "links": "//li[@class=\"news\"]//div[@class=\"desc\"]/h3/a/@href",
+      "next-page": "//ul[@class=\"pagination justify-content-center\"]//li[last()]/a/@href"
+    },
+    "article": {
+      "body": "//div[contains(@class, 'item-body')]//p//text()",
+      "title": "//div[contains(@class, 'item-title')]//text()",
+      "snippet": "//div[contains(@class, 'summary')]//p/text()",
+      "date": "//div[contains(@class, 'item-nav')]/div[contains(@class, 'item-date')]/span/text()"
+    }
+  },
+  "isna": {
+    "base_url": "https://www.isna.ir",
+    "attributes": "/archive?pi={page_index}&ms=0&dy={day}&mn={month}&yr={year}",
+    "archive": {
+      "links": "//div[@class=\"items\"]//div[@class=\"desc\"]/h3/a/@href",
+      "next-page": "//ul[@class=\"pagination pagination-full pnum\"]//li[last()]/a/@href"
+    },
+    "article": {
+      "body": "//div[@class=\"item-text\"]//text()",
+      "title": "//div[contains(@class, 'item-title')]//text()",
+      "snippet": "//div[contains(@class, 'item-body')]//p//text()",
+      "date": "//div[@class='meta-news']//meta[@itemprop='datePublished']/@content"
+    }
+  },
+  "irna": {
+    "base_url": "https://www.irna.ir",
+    "attributes": "/archive?pi={page_index}&ms=0&ty=1&dy={day}&mn={month}&yr={year}",
+    "archive": {
+      "links": "//li[@class=\"news\"]//div[@class=\"desc\"]/h3/a/@href",
+      "next-page": "//ul[@class=\"pagination justify-content-center\"]//li[last()]/a/@href"
+    },
+    "article": {
+      "body": "//div[@class='item-body']//text()",
+      "title": "//h1[@class='title']//text()",
+      "snippet": "//p[@class='summary introtext']//text()",
+      "date": "//div[@class='item-date']//text()"
+    }
+  },
+  "fars": {
+    "base_url": "https://www.farsnews.ir",
+    "attributes": "/archive?cat=-1&subcat=-1&date={year}%2F{month}%2F{day}&p={page_index}",
+    "archive": {
+      "links": "//li[@class=\"media py-3 border-bottom  align-items-start\"]/a//@href",
+      "next-page": "[NULL]"
+    },
+    "article": {
+      "body": "//div[@itemprop=\"articleBody\"]//text()",
+      "title": "//h1[@itemprop=\"headline\"]//text()",
+      "snippet": "//p[@itemprop=\"description\"]//text()",
+      "date": "//div[@itemprop=\"datePublished\"]/time/@datetime"
+    }
+  },
+  "hamshahri": {
+    "base_url": "https://www.hamshahrionline.ir/",
+    "attributes": "/archive?pi={page_index}&ty=1&ms=0&dy={day}&mn={month}&yr={year}",
+    "archive": {
+      "links": "//div[@class=\"desc\"]/h3/a/@href",
+      "next-page": "//ul[@class=\"pagination justify-content-center\"]//li[last()]/a/@href"
+    },
+    "article": {
+      "body": "//div[@itemprop=\"articleBody\"]//text()",
+      "title": "//div[@class=\"item-title\"]//text()",
+      "snippet": "//p[@itemprop=\"description\"]//text()",
+      "date": "//div[@class=\"col-6 col-sm-4 col-xl-4 item-date\"]/span/text()"
+    }
+  }
+}

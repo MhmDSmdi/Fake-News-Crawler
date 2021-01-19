@@ -1,0 +1,11 @@
+Learning:
+
+Spider:
+    DONE # Search google using denial keywords
+    DONE # Search fake candidate using google without denial keywords
+    # UI for annotating news
+    # UI for accpet/reject news
+    DONE # Scrap general texts from persian websites
+    DONE # Scrap archive news from agencies
+        
+Data:
