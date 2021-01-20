@@ -1,9 +1,24 @@
-from hazm import *
 import datetime
 import re
 from persiantools.jdatetime import JalaliDate
+import glob
+from parsivar import Normalizer, Tokenizer, FindStems, POSTagger
+from collections import OrderedDict
+import arabic_reshaper
 
-persian_month_dict = {
+STOPWORDS_PATH = './stopwords/{}'
+tokenizer = Tokenizer()
+normalizer = Normalizer()
+stemmer = FindStems()
+# tagger = POSTagger(tagging_model="wapiti")
+STOPWORD_SET = set()
+for stop_file in glob.glob(STOPWORDS_PATH.format('*.txt')):
+    file = open(stop_file, 'r')
+    lines = file.readlines()
+    for line in lines:
+        STOPWORD_SET.add(line.strip('\n'))
+
+PERSIAN_MONTH_DICT = {
     'فروردین': '01',
     'اردیبهشت': '02',
     'خرداد': '03',
@@ -18,7 +33,7 @@ persian_month_dict = {
     'اسفند': '12'
 }
 
-english_month_dict = {
+ENGLISH_MONTH_DICT = {
     'ژانویهٔ': '01',
     'فوریهٔ': '02',
     'مارس': '03',
@@ -33,28 +48,39 @@ english_month_dict = {
     'دسامبر': '12'
 }
 
-normalizer = Normalizer()
-stemmer = Stemmer()
-tokenizer = WordTokenizer()
-lema = Lemmatizer()
-
-
-def clean_text(text, remove_stopwords=True):
-    stop_list = []
-    if remove_stopwords:
-        stop_list = stopwords_list()
-    data = re.sub(r'([1234567890۱۲٢٠٨۳۴۵٥٥۶۷۸۹۰٦٤١]+)|([^\w\s])', '', text)
-    data = normalizer.normalize(data)
-    tokens = tokenizer.tokenize(data)
-    # tokens = [word for word in tokens if word not in stop_list]
-    return ' '.join(tokens)
-
-
 def num_persian2english(text):
     in_tab = '۱۲۳۴۵۶۷۸۹۰١٢٣٤٥٦٧٨٩٠'
     out_tab = '12345678901234567890'
     translation_table = str.maketrans(in_tab, out_tab)
     return text.translate(translation_table)
+
+def removeDupWithOrder(text):
+    modified_word = '~'
+    for char in text:
+        if modified_word[-1] != char:
+            modified_word += char
+    return modified_word[1:]
+
+def clean(text, keep_stopword=False, tokenized=True, stemming=True, remove_repetition=True):
+    text = re.sub(r"[,.;:?!،()؟]+", " ", text)
+    text = re.sub('[^\u0600-\u06FF]+', " ", text)
+    text = re.sub(r'[\u200c\s]*\s[\s\u200c]*', " ", text)
+    text = re.sub(r'[\u200c]+', " ", text)
+    text = re.sub(r'[\n]+', " ", text)
+    text = re.sub(r'[\t]+', " ", text)
+    text = re.sub(r'([1234567890۱۲٢٠٨۳۴۵٥٥۶۷۸۹۰٦٤١]+)|([^\w\s])', '', text)
+    if remove_repetition:
+        text = removeDupWithOrder(text)
+    text = normalizer.normalize(text)
+    text = tokenizer.tokenize_words(text)
+    if not keep_stopword:
+        text = list(filter(lambda x: x not in STOPWORD_SET, text))
+    if stemming:
+        text = list(stemmer.convert_to_stem(word).split('&')[0] for word in text)
+    if not tokenized:
+        text = ' '.join([str(elem) for elem in text])
+        text = arabic_reshaper.reshape(text)
+    return text
 
 
 def date_persian2english(in_date, delimiter='-', persian_month=True):
@@ -75,8 +101,12 @@ def date_persian2english(in_date, delimiter='-', persian_month=True):
     months = num_persian2english(dates[1])
     if not months.isdigit():
         if persian_month:
-            months = persian_month_dict[months]
+            months = PERSIAN_MONTH_DICT[months]
         else:
-            months = english_month_dict[months]
+            months = ENGLISH_MONTH_DICT[months]
     date = JalaliDate(day=int(days), month=int(months), year=int(year)).to_gregorian().strftime('%Y%m%d')
     return date
+
+test_file = open('./text_test.txt', 'r')
+text = test_file.read()
+print(clean(text, keep_stopword=True, tokenized=False, stemming=False))

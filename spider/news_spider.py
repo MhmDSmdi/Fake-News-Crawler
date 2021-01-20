@@ -5,7 +5,6 @@ from scrapy.crawler import CrawlerProcess
 from datetime import datetime
 from datetime import timedelta
 
-
 class NewsHolder(scrapy.Item):
     title = scrapy.Field()
     body = scrapy.Field()
