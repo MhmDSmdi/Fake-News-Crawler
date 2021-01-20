@@ -4,7 +4,7 @@ from itemadapter import ItemAdapter
 from text_processor import cleaner
 
 
-class TextProcessingPipeline:
+class NewsProcessingPipeline:
     def process_item(self, item, spider):
         adapter = ItemAdapter(item)
         adapter['body'] = ' '.join(adapter['body'].split())
@@ -27,6 +27,11 @@ class TextProcessingPipeline:
             adapter['date'] = cleaner.date_persian2english(' '.join(adapter['date'].split('-')[0].split()[1:4]), delimiter=' ')
         return item
 
+class ParagraphProcessingPipeline:
+    def process_item(self, item, spider):
+        adapter = ItemAdapter(item)
+        adapter['texts'] = cleaner.clean(adapter['texts'], stemming=False, tokenized=False, keep_stopword=True)
+        return item
 
 class MongoPipeline:
     def __init__(self, mongo_collection, mongo_db):

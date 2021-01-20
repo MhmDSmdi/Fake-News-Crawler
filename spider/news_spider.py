@@ -87,14 +87,14 @@ class ParagraphSpider(scrapy.Spider):
         'FEED_FORMAT': 'csv',
         'FEED_EXPORT_FIELDS': None,
         'ITEM_PIPELINES': {
-            'spider.pipelines.TextProcessingPipeline': 300,
+            'spider.pipelines.ParagraphProcessingPipeline': 300,
         }
     }
     start_urls = []
 
-    def __init__(self, links, *args, **kwargs):
+    def __init__(self, start_links, *args, **kwargs):
         super(ParagraphSpider, self).__init__(*args, **kwargs)
-        self.start_urls = links
+        self.start_urls = start_links
 
     def parse(self, response, **kwargs):
         extracted_texts = FreeText()
