@@ -10,7 +10,6 @@ STOPWORDS_PATH = './stopwords/{}'
 tokenizer = Tokenizer()
 normalizer = Normalizer()
 stemmer = FindStems()
-# tagger = POSTagger(tagging_model="wapiti")
 STOPWORD_SET = set()
 for stop_file in glob.glob(STOPWORDS_PATH.format('*.txt')):
     file = open(stop_file, 'r')
@@ -106,7 +105,3 @@ def date_persian2english(in_date, delimiter='-', persian_month=True):
             months = ENGLISH_MONTH_DICT[months]
     date = JalaliDate(day=int(days), month=int(months), year=int(year)).to_gregorian().strftime('%Y%m%d')
     return date
-
-test_file = open('./text_test.txt', 'r')
-text = test_file.read()
-print(clean(text, keep_stopword=True, tokenized=False, stemming=False))

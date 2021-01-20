@@ -28,7 +28,7 @@ def query_builder(query, exact_terms=[], exclude_terms=[], site=None, remove_sto
     EXACT_HOLDER = r' "{}" '
     EXCLUDE_HOLDER = r' -{}'
     SITE_HOLDER = r' site:{}'
-    stopwords = open('news_stopwords.txt', 'r').read().split('\n')
+    stopwords = open('../text_processor/stopwords/news_stopwords.txt', 'r').read().split('\n')
     query = ' '.join(list(filter(lambda word: word not in filter_words + stopwords,
                                  query.translate(str.maketrans('', '', string.punctuation)).split())))
     for exact in exact_terms:

@@ -109,25 +109,19 @@ class ParagraphSpider(scrapy.Spider):
         yield extracted_texts
 
 
-def do_crawl(spider, agency_name=None, links=None, start_date='13990101', end_date='13990112'):
+def do_crawl(spider_name, agency_name=None, links=None, start_date='13990101', end_date='13990112'):
     process = CrawlerProcess({
         'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
     })
-    # if isinstance(spider, NewsSpider):
-    process.crawl(spider, agency=agency_name, date_from=start_date, date_to=end_date)
-    # elif isinstance(spider, ParagraphSpider):
-    # process.crawl(spider, links)
+    if spider_name == 'news-spider':
+        process.crawl(NewsSpider, agency=agency_name, date_from=start_date, date_to=end_date)
+    elif spider_name == 'paragraph-spider':
+        process.crawl(ParagraphSpider, links)
     process.start()
 
 
 if __name__ == '__main__':
-    import pandas as pd
-    # url_list = df['f_url'].to_list()
-    # idx = df['row_id'].to_list()
     config = json.loads(open('./archive_news_agency_structure.json', 'r').read())
-    process = CrawlerProcess({
-        'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
-    })
-    process.crawl(NewsSpider, agency=list(config.keys())[3], date_from='13880701', date_to='13990615')
-    # process.crawl(NewsSpider, agency=list(config.keys())[3], date_from='13990601', date_to='13990615')
-    process.start()
+    link = ['https://www.isna.ir/news/99100603625/%D8%AC%D9%86%D8%AC%D8%A7%D9%84%DB%8C-%D8%AA%D8%B1%DB%8C%D9%86-%D8%AA%D8%BA%DB%8C%DB%8C%D8%B1%D8%A7%D8%AA-%DA%A9%D8%AA%D8%A7%D8%A8-%D9%87%D8%A7%DB%8C-%D8%AF%D8%B1%D8%B3%DB%8C']
+    # do_crawl(spider_name='news-spider', agency_name=list(config.keys())[3], start_date='13880701', end_date='13990615')
+    do_crawl(spider_name='paragraph-spider', links=link)
